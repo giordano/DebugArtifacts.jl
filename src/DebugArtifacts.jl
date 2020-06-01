@@ -40,7 +40,7 @@ end
 
 # Debug code contributed by @staticfloat
 function debug_artifact(artifact_name::String, platform = platform_key_abi())
-    @info "Platform: $(platform_key_abi())"
+    @info "Platform: $(platform)"
     InteractiveUtils.versioninfo()
     println()
 
