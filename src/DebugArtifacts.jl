@@ -4,7 +4,7 @@ export debug_artifact
 
 # Adapt this script to debug why artifact installation might be failing
 
-using Pkg, Pkg.Artifacts, Pkg.BinaryPlatforms, Pkg.PlatformEngines
+using Pkg, Pkg.Artifacts, Pkg.BinaryPlatforms, Pkg.PlatformEngines, InteractiveUtils
 
 function get_meta(artifact_name, artifacts_toml, platform = platform_key_abi())
     artifact_dict = Pkg.Artifacts.load_artifacts_toml(artifacts_toml)
@@ -40,6 +40,10 @@ end
 
 # Debug code contributed by @staticfloat
 function debug_artifact(artifact_name::String, platform = platform_key_abi())
+    @info "Platform: $(platform_key_abi())"
+    InteractiveUtils.versioninfo()
+    println()
+
     # Initialize Pkg code
     probe_platform_engines!(; verbose=true)
 
