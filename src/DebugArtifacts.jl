@@ -45,7 +45,9 @@ function debug_artifact(artifact_name::String, platform = platform_key_abi())
     println()
 
     # Initialize Pkg code
-    probe_platform_engines!(; verbose=true)
+    @static if Base.VERSION < v"1.8-"
+        probe_platform_engines!(; verbose=true)
+    end
 
     # Change these to whatever you need them to be, to debug your artifacts code
     artifacts_toml_url = "https://raw.githubusercontent.com/JuliaBinaryWrappers/$(artifact_name)_jll.jl/master/Artifacts.toml"
