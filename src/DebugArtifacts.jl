@@ -39,7 +39,8 @@ function print_download_artifact_cmd(artifact_name::String, platform = platform_
 end
 
 # Debug code contributed by @staticfloat
-function debug_artifact(artifact_name::String, platform = platform_key_abi())
+function debug_artifact(artifact_name::String, platform = platform_key_abi();
+                        artifacts_toml::Union{String, Nothing} = nothing)
     @info "Platform: $(platform)"
     InteractiveUtils.versioninfo()
     println()
@@ -49,14 +50,16 @@ function debug_artifact(artifact_name::String, platform = platform_key_abi())
         probe_platform_engines!(; verbose=true)
     end
 
-    # Change these to whatever you need them to be, to debug your artifacts code
-    artifacts_toml_url = "https://raw.githubusercontent.com/JuliaBinaryWrappers/$(artifact_name)_jll.jl/master/Artifacts.toml"
-
     mktempdir() do tmp_dir
-        # First, download Artifacts.toml file to temporary directory
-        artifacts_toml = joinpath(tmp_dir, "Artifacts.toml")
-        @info("Downloading Artifacts.toml to $(artifacts_toml)...")
-        Pkg.PlatformEngines.download(artifacts_toml_url, artifacts_toml; verbose=true)
+        if artifacts_toml === nothing
+            # Change these to whatever you need them to be, to debug your artifacts code
+            artifacts_toml_url = "https://raw.githubusercontent.com/JuliaBinaryWrappers/$(artifact_name)_jll.jl/master/Artifacts.toml"
+
+            # First, download Artifacts.toml file to temporary directory
+            artifacts_toml = joinpath(tmp_dir, "Artifacts.toml")
+            @info("Downloading Artifacts.toml to $(artifacts_toml)...")
+            Pkg.PlatformEngines.download(artifacts_toml_url, artifacts_toml; verbose=true)
+        end
 
         # Extract artifact metadata for the current platform (you can override this)
         @info("Extracting artifact info for platform $(triplet(platform))...")
